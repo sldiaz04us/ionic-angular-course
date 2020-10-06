@@ -27,7 +27,9 @@
               *ngIf="emailCtrl.invalid && emailCtrl.touched"
               lines="none"
             >
-              <ion-label>Should be a valid email address.</ion-label>
+              <ion-text color="danger"
+                >Should be a valid email address.</ion-text
+              >
             </ion-item>
             <ion-item>
               <ion-label position="floating">Password</ion-label>
@@ -46,8 +48,8 @@
               *ngIf="passwordCtrl.invalid && passwordCtrl.touched"
               lines="none"
             >
-              <ion-label
-                >The password should have at least 6 characters</ion-label
+              <ion-text color="danger"
+                >The password should have at least 6 characters</ion-text
               >
             </ion-item>
           </ion-list>
