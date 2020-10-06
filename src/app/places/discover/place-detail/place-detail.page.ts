@@ -42,11 +42,11 @@ export class PlaceDetailPage implements OnInit {
     this.actionSheetCtrl.create({
       header: 'Choose an Action',
       buttons: [
-        {
-          text: 'Delete',
-          role: 'destructive',
-          icon: 'trash-outline'
-        },
+        // {
+        //   text: 'Delete',
+        //   role: 'destructive',
+        //   icon: 'trash-outline'
+        // },
         {
           text: 'Select Date',
           handler: () => {
@@ -73,7 +73,8 @@ export class PlaceDetailPage implements OnInit {
       {
         component: CreateBookingComponent,
         componentProps: {
-          selectedPlace: this.place
+          selectedPlace: this.place,
+          selectedMode: mode
         }
       }).then(modalEl => {
         modalEl.present();
