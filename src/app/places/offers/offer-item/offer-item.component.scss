@@ -1,16 +1,10 @@
 h2 {
   font-size: 18px;
-  border: 1px solid var(--ion-color-primary);
   padding: 8px;
-  border-radius: 5px;
+  padding-left: 0;
   color: var(--ion-color-primary);
 }
 
-.offer-details {
-  display: flex;
-  align-items: center;
-
-  .space-left {
-    margin-left: 5px;
-  }
+.space-left {
+  margin-left: 5px;
 }

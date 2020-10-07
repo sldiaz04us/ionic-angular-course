@@ -5,12 +5,20 @@
   <ion-label>
     <h2>{{ offer.title }}</h2>
     <!-- <p>{{ offer.description }}</p> -->
-    <div class="offer-details">
+    <div>
       <ion-icon name="calendar-outline" color="primary"></ion-icon>
-      <ion-text color="tertiary" class="space-left">{{ getDymmyDate() | date }}</ion-text>
+      <ion-text color="tertiary" class="space-left">{{
+        getDymmyDate() | date
+      }}</ion-text>
       <span class="space-left">to</span>
-      <ion-icon name="calendar-outline" color="primary" class="space-left"></ion-icon>
-      <ion-text color="tertiary" class="space-left">{{ getDymmyDate() | date }}</ion-text>
+      <ion-icon
+        name="calendar-outline"
+        color="primary"
+        class="space-left"
+      ></ion-icon>
+      <ion-text color="tertiary" class="space-left">{{
+        getDymmyDate() | date
+      }}</ion-text>
     </div>
   </ion-label>
 </ion-item>
