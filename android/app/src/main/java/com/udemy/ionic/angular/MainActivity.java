@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.udemy.ionic.angular;
 
 import android.os.Bundle;
 
