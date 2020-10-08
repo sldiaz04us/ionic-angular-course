@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from 'rxjs';
+import { delay, map, take, tap } from 'rxjs/operators';
+
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
 
@@ -8,8 +11,9 @@ import { AuthService } from '../auth/auth.service';
 })
 export class PlacesService {
   // tslint:disable-next-line: variable-name
-  private _places: Place[] = [
-    new Place('p1',
+  private _places = new BehaviorSubject<Place[]>([
+    new Place(
+      'p1',
       'Manhattan Mansion',
       'In the heart of New York City',
       'https://3.bp.blogspot.com/_3k2ilY9vkCY/S73R1HhD_OI/AAAAAAAAASo/0gpAWoUgQzo/s1600/ResSinclairHFExt2.jpg',
@@ -18,7 +22,8 @@ export class PlacesService {
       new Date('2019-12-31'),
       'abc'
     ),
-    new Place('p2',
+    new Place(
+      'p2',
       'Eiffel Tower',
       'A romantic place in Paris',
       'https://i.etsystatic.com/5579272/r/il/08c50e/566199323/il_794xN.566199323_rw1x.jpg',
@@ -27,7 +32,8 @@ export class PlacesService {
       new Date('2019-12-31'),
       'abc'
     ),
-    new Place('p3',
+    new Place(
+      'p3',
       'The Foggy Palace',
       'Not your average city trip!',
       'https://i.pinimg.com/originals/9c/88/44/9c8844b217bdb6c17db14f51ad2e51a5.jpg',
@@ -36,16 +42,21 @@ export class PlacesService {
       new Date('2019-12-31'),
       'abc'
     ),
-  ];
+  ]);
 
   constructor(private authService: AuthService) { }
 
   get places() {
-    return [...this._places];
+    return this._places.asObservable();
   }
 
   getPlaceById(placeId: string) {
-    return { ...this._places.find(place => place.id === placeId) };
+    return this.places.pipe(
+      take(1),
+      map(places => {
+        return places.find(place => place.id === placeId);
+      })
+    );
   }
 
   addPlace(
@@ -66,6 +77,31 @@ export class PlacesService {
       dateTo,
       userId
     );
-    this._places.push(newPlace);
+
+    return this.places.pipe(
+      take(1),
+      // delay(1000),
+      tap(places => {
+        this._places.next(places.concat(newPlace));
+      })
+    );
   }
+
+  updatePlace(place: Place) {
+    return this.places.pipe(
+      take(1),
+      // delay(1000),
+      map(places => {
+        return places.map(p => {
+          if (p.id === place.id) {
+            return place;
+          } else {
+            return p;
+          }
+        });
+      }),
+      tap(places => this._places.next(places))
+    );
+  }
+
 }
