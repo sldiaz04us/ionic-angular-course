@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { IonItemSliding } from '@ionic/angular';
+
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
 
@@ -16,6 +18,21 @@ export class OffersPage implements OnInit {
 
   ngOnInit() {
     this.offers = this.placesService.places;
+  }
+
+  // Ionic Life Cycles
+  ionViewWillEnter() {
+    this.offers = this.placesService.places;
+    console.log('ionViewWillEnter');
+  }
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter ');
+  }
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave ');
+  }
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave ');
   }
 
   onEdit(offerId: string, slidingItem: IonItemSliding) {
