@@ -15,6 +15,7 @@ import { PlacesService } from '../places.service';
 })
 export class OffersPage implements OnInit, OnDestroy {
   offers: Place[];
+  isLoading = false;
   private placesSub: Subscription;
 
   constructor(private placesService: PlacesService, private router: Router) { }
@@ -26,6 +27,9 @@ export class OffersPage implements OnInit, OnDestroy {
   // Ionic Life Cycles
   ionViewWillEnter() {
     // this.offers = this.placesService.places;
+
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(() => this.isLoading = false);
     console.log('ionViewWillEnter');
   }
   ionViewDidEnter() {

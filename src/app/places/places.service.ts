@@ -7,48 +7,90 @@ import { delay, map, switchMap, take, tap } from 'rxjs/operators';
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
 
+interface IPlaceData {
+  availableFrom: string;
+  availableTo: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  title: string;
+  userId: string;
+}
 @Injectable({
   providedIn: 'root'
 })
 export class PlacesService {
+  private placesDataBaseUrl = 'https://ionic-angular-udemy-84332.firebaseio.com/offers-places.json';
+
   // tslint:disable-next-line: variable-name
   private _places = new BehaviorSubject<Place[]>([
-    new Place(
-      'p1',
-      'Manhattan Mansion',
-      'In the heart of New York City',
-      'https://3.bp.blogspot.com/_3k2ilY9vkCY/S73R1HhD_OI/AAAAAAAAASo/0gpAWoUgQzo/s1600/ResSinclairHFExt2.jpg',
-      149.99,
-      new Date('2019-01-01'),
-      new Date('2019-12-31'),
-      'xyz'
-    ),
-    new Place(
-      'p2',
-      'Eiffel Tower',
-      'A romantic place in Paris',
-      'https://i.etsystatic.com/5579272/r/il/08c50e/566199323/il_794xN.566199323_rw1x.jpg',
-      189.99,
-      new Date('2019-01-01'),
-      new Date('2019-12-31'),
-      'abc'
-    ),
-    new Place(
-      'p3',
-      'The Foggy Palace',
-      'Not your average city trip!',
-      'https://i.pinimg.com/originals/9c/88/44/9c8844b217bdb6c17db14f51ad2e51a5.jpg',
-      99.99,
-      new Date('2019-01-01'),
-      new Date('2019-12-31'),
-      'abc'
-    ),
+    // new Place(
+    //   'p1',
+    //   'Manhattan Mansion',
+    //   'In the heart of New York City',
+    //   'https://3.bp.blogspot.com/_3k2ilY9vkCY/S73R1HhD_OI/AAAAAAAAASo/0gpAWoUgQzo/s1600/ResSinclairHFExt2.jpg',
+    //   149.99,
+    //   new Date('2019-01-01'),
+    //   new Date('2019-12-31'),
+    //   'xyz'
+    // ),
+    // new Place(
+    //   'p2',
+    //   'Eiffel Tower',
+    //   'A romantic place in Paris',
+    //   'https://i.etsystatic.com/5579272/r/il/08c50e/566199323/il_794xN.566199323_rw1x.jpg',
+    //   189.99,
+    //   new Date('2019-01-01'),
+    //   new Date('2019-12-31'),
+    //   'abc'
+    // ),
+    // new Place(
+    //   'p3',
+    //   'The Foggy Palace',
+    //   'Not your average city trip!',
+    //   'https://i.pinimg.com/originals/9c/88/44/9c8844b217bdb6c17db14f51ad2e51a5.jpg',
+    //   99.99,
+    //   new Date('2019-01-01'),
+    //   new Date('2019-12-31'),
+    //   'abc'
+    // ),
   ]);
 
   constructor(private authService: AuthService, private http: HttpClient) { }
 
   get places() {
     return this._places.asObservable();
+  }
+
+  fetchPlaces() {
+    return this.http.get<{ [key: string]: IPlaceData }>(this.placesDataBaseUrl)
+      .pipe(
+        delay(500),
+        map(resData => {
+          const places = [];
+          for (const key in resData) {
+            if (Object.prototype.hasOwnProperty.call(resData, key)) {
+              places.push(
+                new Place(
+                  key,
+                  resData[key].title,
+                  resData[key].description,
+                  resData[key].imageUrl,
+                  resData[key].price,
+                  new Date(resData[key].availableFrom),
+                  new Date(resData[key].availableTo),
+                  resData[key].userId
+                )
+              );
+            }
+          }
+          return places;
+          // return [];
+        }),
+        tap(places => {
+          this._places.next(places);
+        })
+      );
   }
 
   getPlaceById(placeId: string) {
@@ -81,7 +123,7 @@ export class PlacesService {
     );
 
     return this.http.post<{ name: string }>(
-      'https://ionic-angular-udemy-84332.firebaseio.com/offers-places.json',
+      this.placesDataBaseUrl,
       {
         ...newPlace, id: null
       }
