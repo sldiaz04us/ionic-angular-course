@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { BehaviorSubject } from 'rxjs';
-import { delay, map, take, tap } from 'rxjs/operators';
+import { delay, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
@@ -44,7 +45,7 @@ export class PlacesService {
     ),
   ]);
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private http: HttpClient) { }
 
   get places() {
     return this._places.asObservable();
@@ -66,6 +67,7 @@ export class PlacesService {
     dateFrom: Date,
     dateTo: Date
   ) {
+    let generateId: string;
     const userId = this.authService.userId;
     const newPlace = new Place(
       Math.random().toString(),
@@ -76,6 +78,24 @@ export class PlacesService {
       dateFrom,
       dateTo,
       userId
+    );
+
+    return this.http.post<{ name: string }>(
+      'https://ionic-angular-udemy-84332.firebaseio.com/offers-places.json',
+      {
+        ...newPlace, id: null
+      }
+    ).pipe(
+      switchMap(resData => {
+        generateId = resData.name;
+        return this.places;
+      }),
+      take(1),
+      tap(places => {
+        newPlace.id = generateId;
+        this._places.next(places.concat(newPlace));
+      })
+
     );
 
     return this.places.pipe(
