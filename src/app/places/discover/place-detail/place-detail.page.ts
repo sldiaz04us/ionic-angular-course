@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   ActionSheetController,
+  AlertController,
   LoadingController,
   ModalController,
   NavController
@@ -24,6 +25,7 @@ import { AuthService } from '../../../auth/auth.service';
 export class PlaceDetailPage implements OnInit, OnDestroy {
   place: Place;
   isBookable = false;
+  isLoading = false;
   private placeSub: Subscription;
   private bookingsSub: Subscription;
 
@@ -36,7 +38,8 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingService,
     private loadingCtrl: LoadingController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alterCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -45,10 +48,25 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/places/tabs/discover');
         return;
       }
+      this.isLoading = true;
       this.placeSub = this.placesService.getPlaceById(paramMap.get('placeId'))
         .subscribe(place => {
           this.place = place;
           this.isBookable = this.place.userId !== this.authService.userId;
+          this.isLoading = false;
+        }, error => {
+          this.alterCtrl.create({
+            header: 'An error ocurred!',
+            message: 'Could not load place.',
+            buttons: [
+              {
+                text: 'OK',
+                handler: () => {
+                  this.navController.navigateBack('/places/tabs/discover');
+                }
+              }
+            ]
+          }).then(alertEl => alertEl.present());
         });
     });
   }
