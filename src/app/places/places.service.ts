@@ -94,12 +94,27 @@ export class PlacesService {
   }
 
   getPlaceById(placeId: string) {
-    return this.places.pipe(
-      take(1),
-      map(places => {
-        return places.find(place => place.id === placeId);
-      })
-    );
+    return this.http.get<IPlaceData>(`https://ionic-angular-udemy-84332.firebaseio.com/offers-places/${placeId}.json`)
+      .pipe(
+        map(resData => {
+          return new Place(
+            placeId,
+            resData.title,
+            resData.description,
+            resData.imageUrl,
+            resData.price,
+            new Date(resData.availableFrom),
+            new Date(resData.availableTo),
+            resData.userId);
+        })
+      );
+
+    // return this.places.pipe(
+    //   take(1),
+    //   map(places => {
+    //     return places.find(place => place.id === placeId);
+    //   })
+    // );
   }
 
   addPlace(

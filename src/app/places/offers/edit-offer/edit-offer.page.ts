@@ -17,6 +17,7 @@ import { Place } from '../../place.model';
 export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
   editForm: FormGroup;
+  isLoading = false;
   private placeSub: Subscription;
 
   constructor(
@@ -32,6 +33,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/places/tabs/offers');
         return;
       }
+      this.isLoading = true;
       this.placeSub = this.placesService.getPlaceById(paramMap.get('placeId'))
         .subscribe(place => {
           this.place = place;
@@ -45,6 +47,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
               validators: [Validators.required, Validators.maxLength(180)]
             })
           });
+          this.isLoading = false;
         });
 
     });
