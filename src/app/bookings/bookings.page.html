@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <ion-grid *ngIf="loadedBookings?.length > 0; else noBookings">
     <ion-row>
       <ion-col size-md="6" offset-md="3">
         <ion-list>
@@ -19,7 +19,7 @@
             <ion-item>
               <ion-label>
                 <h5>{{ booking.placeTitle }}</h5>
-                <p>{{ booking.guestNumber }}</p>
+                <p>Guests: {{ booking.guestNumber }}</p>
               </ion-label>
             </ion-item>
             <ion-item-options>
@@ -35,4 +35,21 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ng-template #noBookings>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Not Bookings Available</ion-card-title>
+            </ion-card-header>
+            <ion-img [src]="'assets/images/no-data.png'"></ion-img>
+            <ion-card-content>
+              <ion-text> You don't have bookings! </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
 </ion-content>

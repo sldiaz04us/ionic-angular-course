@@ -66,14 +66,14 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
-  // Custom Styles
+  /* Custom Styles */
   --ion-toolbar-background: var(--ion-color-primary);
   --ion-toolbar-color: var(--ion-color-primary-contrast);
   --ion-toolbar-segment-color: var(--ion-color-primary-contrast);
   --ion-toolbar-segment-color-checked: var(--ion-color-primary-contrast);
 }
 
-// Custom Styles for iOS Platform
+/* Custom Styles for iOS Platform */
 .ios {
   --ion-toolbar-segment-color-checked: var(--ion-color-dark);
   // --ion-toolbar-segment-indicator-color: var(--ion-color-primary-shade);

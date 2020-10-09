@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 
 import { Place } from '../place.model';
 import { PlacesService } from '../places.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-discover',
@@ -16,17 +17,20 @@ import { PlacesService } from '../places.service';
 export class DiscoverPage implements OnInit, OnDestroy {
   loadedPlaces: Place[];
   listedLoadedPlaces: Place[];
+  relevantePlaces: Place[];
   private loadedPlacesSub: Subscription;
 
   constructor(
     private placesService: PlacesService,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     this.loadedPlacesSub = this.placesService.places.subscribe(places => {
       this.loadedPlaces = places;
-      this.listedLoadedPlaces = this.loadedPlaces.slice(1);
+      this.relevantePlaces = places;
+      this.listedLoadedPlaces = this.relevantePlaces.slice(1);
     });
   }
 
@@ -40,7 +44,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-    console.log('SegmentEvent', event);
+    if (event.detail.value === 'all') {
+      this.relevantePlaces = this.loadedPlaces;
+      this.listedLoadedPlaces = this.relevantePlaces.slice(1);
+    } else { // value === bookable
+      this.relevantePlaces = this.loadedPlaces
+        .filter(place => place.userId !== this.authService.userId);
+      this.listedLoadedPlaces = this.relevantePlaces.slice(1);
+    }
   }
 
   ngOnDestroy() {
