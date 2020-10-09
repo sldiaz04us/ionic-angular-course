@@ -140,17 +140,17 @@ export class PlacesService {
 
     );
 
-    return this.places.pipe(
-      take(1),
-      // delay(1000),
-      tap(places => {
-        this._places.next(places.concat(newPlace));
-      })
-    );
+    // return this.places.pipe(
+    //   take(1),
+    //   // delay(1000),
+    //   tap(places => {
+    //     this._places.next(places.concat(newPlace));
+    //   })
+    // );
   }
 
   updatePlace(place: Place) {
-    return this.places.pipe(
+    this.places.pipe(
       take(1),
       // delay(1000),
       map(places => {
@@ -164,6 +164,25 @@ export class PlacesService {
       }),
       tap(places => this._places.next(places))
     );
+    return this.http.put(
+      `https://ionic-angular-udemy-84332.firebaseio.com/offers-places/${place.id}.json`,
+      { ...place, id: null }
+    );
+
+    // return this.places.pipe(
+    //   take(1),
+    //   // delay(1000),
+    //   map(places => {
+    //     return places.map(p => {
+    //       if (p.id === place.id) {
+    //         return place;
+    //       } else {
+    //         return p;
+    //       }
+    //     });
+    //   }),
+    //   tap(places => this._places.next(places))
+    // );
   }
 
 }
