@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject } from "rxjs";
-import { take, delay, tap, switchMap, map } from "rxjs/operators";
+import { BehaviorSubject } from 'rxjs';
+import { take, delay, tap, switchMap, map } from 'rxjs/operators';
 
-import { Booking } from "./booking.model";
-import { AuthService } from "../auth/auth.service";
-import { HttpClient } from "@angular/common/http";
+import { Booking } from './booking.model';
+import { AuthService } from '../auth/auth.service';
 
 interface IBookingsData {
   bookedFrom: string;
@@ -19,10 +19,10 @@ interface IBookingsData {
   userId: string;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class BookingService {
   private bookingsDataBaseUrl =
-    "https://ionic-angular-udemy-84332.firebaseio.com/bookings.json";
+    'https://ionic-angular-udemy-84332.firebaseio.com/bookings.json';
 
   // tslint:disable-next-line: variable-name
   private _bookings = new BehaviorSubject<Booking[]>([]);
