@@ -14,6 +14,7 @@ import { BookingService } from './booking.service';
 })
 export class BookingsPage implements OnInit, OnDestroy {
   loadedBookings: Booking[];
+  isLoading = false;
   private bookingsSub: Subscription;
   private deletingBookingsSub: Subscription;
 
@@ -27,6 +28,11 @@ export class BookingsPage implements OnInit, OnDestroy {
       .subscribe(bookings => {
         this.loadedBookings = bookings;
       });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.bookingService.fetchBookings().subscribe(() => this.isLoading = false);
   }
 
   async onDeleteBooking(bookingId: string, slidingEl: IonItemSliding) {
