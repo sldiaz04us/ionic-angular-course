@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
 
@@ -16,6 +16,7 @@ import { PlaceLocation } from '../../../places/location.model';
   styleUrls: ['./location-picker.component.scss'],
 })
 export class LocationPickerComponent implements OnInit {
+  @Output() locationPick = new EventEmitter<PlaceLocation>();
   selectedLocationImage: string;
   staticMapImageIsLoading = false;
   ionicPrimaryColor: string;
@@ -54,6 +55,7 @@ export class LocationPickerComponent implements OnInit {
           pickedkLocation.staticMapImageUrl = staticMapImageUrl;
           this.selectedLocationImage = staticMapImageUrl;
           this.staticMapImageIsLoading = false;
+          this.locationPick.emit(pickedkLocation);
         });
     });
   }
