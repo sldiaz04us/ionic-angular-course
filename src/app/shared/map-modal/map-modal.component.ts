@@ -1,35 +1,65 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
+
+import { } from 'googlemaps';
+
+import { environment } from 'src/environments/environment';
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-map-modal',
   templateUrl: './map-modal.component.html',
   styleUrls: ['./map-modal.component.scss'],
 })
-export class MapModalComponent implements OnInit, AfterViewInit {
+export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('map') mapElementRef: ElementRef;
+  idleListener: google.maps.MapsEventListener;
+  clickListener: google.maps.MapsEventListener;
 
   constructor(private modalCtrl: ModalController, private renderer: Renderer2) { }
 
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.getGoogleMaps().then(googleMaps => {
+    this.getGoogleMaps().then(() => {
       const mapEl = this.mapElementRef.nativeElement;
-      const map = new googleMaps.Map(mapEl, {
-        center: { lat: 29.760427, lng: -95.369804 },
-        zoom: 16
+      const myLatlng: google.maps.LatLngLiteral = { lat: 30, lng: -110 };
+      const map = new google.maps.Map(mapEl, {
+        center: myLatlng,
+        zoom: 8
       });
 
-      googleMaps.event.addListenerOnce(map, 'idle', () => {
+      this.idleListener = map.addListener('idle', () => {
         this.renderer.addClass(mapEl, 'visible');
       });
 
+      this.clickListener = map.addListener('click', (event) => {
+        const selectedCoords: google.maps.LatLngLiteral = {
+          lat: event.latLng.lat(), lng: event.latLng.lng()
+        };
+        this.modalCtrl.dismiss(selectedCoords);
+      });
 
     }).catch(err => {
       console.log(err);
     });
+  }
+
+  ngOnDestroy() {
+    if (this.clickListener) {
+      this.clickListener.remove();
+    }
+    if (this.idleListener) {
+      this.idleListener.remove();
+    }
   }
 
   onCancel() {
@@ -37,26 +67,26 @@ export class MapModalComponent implements OnInit, AfterViewInit {
   }
 
   private getGoogleMaps() {
-    const win = window as any;
-    const googleModule = win.google;
+    const googleModule = window.google;
     if (googleModule && googleModule.maps) {
-      return Promise.resolve(googleModule.maps);
+      return Promise.resolve();
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC_-1_YVmMfse_tZWeFLcparErQ3e_voeU';
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApi}`;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
       script.onload = () => {
-        const loadedGoogleModule = win.google;
+        const loadedGoogleModule = window.google;
         if (loadedGoogleModule && loadedGoogleModule.maps) {
-          resolve(loadedGoogleModule.maps);
+          resolve();
         } else {
           reject('Google maps SDK not available');
         }
       };
     });
   }
+
 
 }
