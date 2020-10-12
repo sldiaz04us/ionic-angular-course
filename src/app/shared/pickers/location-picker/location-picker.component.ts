@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
 
@@ -34,7 +34,7 @@ export class LocationPickerComponent implements OnInit {
     });
     await modal.present();
     await modal.onDidDismiss().then(modalData => {
-      console.log(modalData);
+      console.log('Modal Data', modalData);
       if (!modalData.data) {
         return;
       }

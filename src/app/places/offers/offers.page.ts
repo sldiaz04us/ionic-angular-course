@@ -24,7 +24,7 @@ export class OffersPage implements OnInit, OnDestroy {
     this.placesSub = this.placesService.places.subscribe(places => this.offers = places);
   }
 
-  // Ionic Life Cycles
+  // Ionic Life Cycles, only works on the direct page, no inside componets added to tha page
   ionViewWillEnter() {
     // this.offers = this.placesService.places;
 
