@@ -1,9 +1,9 @@
-export interface Coordinates {
+export interface ICoordinates {
     lat: number;
     lng: number;
 }
 
-export interface PlaceLocation extends Coordinates {
+export interface IPlaceLocation extends ICoordinates {
     address: string;
     staticMapImageUrl;
 }

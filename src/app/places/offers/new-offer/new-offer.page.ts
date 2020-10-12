@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 
 import { PlacesService } from '../../places.service';
-import { PlaceLocation } from '../../location.model';
+import { IPlaceLocation } from '../../location.model';
 
 @Component({
   selector: 'app-new-offer',
@@ -75,7 +75,7 @@ export class NewOfferPage implements OnInit {
 
   }
 
-  onLocationPick(location: PlaceLocation) {
+  onLocationPick(location: IPlaceLocation) {
     this.form.patchValue({ location });
   }
 

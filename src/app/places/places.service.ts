@@ -6,7 +6,7 @@ import { delay, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
-import { PlaceLocation } from './location.model';
+import { IPlaceLocation } from './location.model';
 
 interface IPlaceData {
   availableFrom: string;
@@ -16,7 +16,7 @@ interface IPlaceData {
   price: number;
   title: string;
   userId: string;
-  location: PlaceLocation;
+  location: IPlaceLocation;
 }
 @Injectable({
   providedIn: 'root'
@@ -128,7 +128,7 @@ export class PlacesService {
     price: number,
     dateFrom: Date,
     dateTo: Date,
-    location: PlaceLocation
+    location: IPlaceLocation
   ) {
     let generateId: string;
     const userId = this.authService.userId;
